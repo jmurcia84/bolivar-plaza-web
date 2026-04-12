@@ -3,14 +3,13 @@ import Layout from '../layouts/Layout.astro';
 import StoreCard from '../components/StoreCard.astro';
 import Popup from '../components/Popup.astro';
 
-const featuredStores = [
-  { name: "McDonald's", category: 'Comidas', floor: 'Piso 1', description: 'Hamburguesas, papas y más' },
-  { name: 'Cruz Verde', category: 'Servicios', floor: 'Piso 1', description: 'Farmacia y droguería' },
-  { name: 'Royal Films', category: 'Entretenimiento', floor: 'Piso 2', description: 'Cine multiplex' },
-  { name: 'Stop Jeans', category: 'Moda', floor: 'Piso 1', description: 'Ropa casual y denim' },
-  { name: 'Ristretto', category: 'Comidas', floor: 'Piso 1', description: 'Café y bebidas especiales' },
-  { name: 'Essence', category: 'Moda', floor: 'Piso 2', description: 'Perfumería y cosméticos' },
-];
+const storeModules = import.meta.glob('../content/stores/*.md', { eager: true });
+const featuredStores = Object.values(storeModules)
+  .map((m) => m.frontmatter)
+  .slice(0, 6);
+
+const popup = await import('../content/popup.json');
+const settings = await import('../content/settings.json');
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -239,11 +238,12 @@ const jsonLd = {
 
   <!-- Popup -->
   <Popup
-    title="¡Ofertas de temporada!"
-    body="Descubre las mejores promociones de nuestras tiendas. Esta semana, descuentos especiales en moda y restaurantes."
-    buttonLabel="Ver promociones"
-    buttonUrl="/directorio"
-    active={true}
+    title={popup.title}
+    body={popup.body}
+    buttonLabel={popup.button_label}
+    buttonUrl={popup.button_url}
+    image={popup.image}
+    active={popup.active}
   />
 </Layout>
 

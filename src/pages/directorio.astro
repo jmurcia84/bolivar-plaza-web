@@ -2,16 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import StoreCard from '../components/StoreCard.astro';
 
-const stores = [
-  { name: "McDonald's", category: 'Comidas', floor: 'Piso 1', description: 'Hamburguesas, papas y más' },
-  { name: 'Cruz Verde', category: 'Servicios', floor: 'Piso 1', description: 'Farmacia y droguería' },
-  { name: 'Royal Films', category: 'Entretenimiento', floor: 'Piso 2', description: 'Cine multiplex' },
-  { name: 'Play Point', category: 'Entretenimiento', floor: 'Piso 2', description: 'Zona de juegos y diversión' },
-  { name: 'Stop Jeans', category: 'Moda', floor: 'Piso 1', description: 'Ropa casual y denim' },
-  { name: 'Ristretto', category: 'Comidas', floor: 'Piso 1', description: 'Café y bebidas especiales' },
-  { name: 'Qbano', category: 'Comidas', floor: 'Piso 1', description: 'Sándwiches y comida rápida colombiana' },
-  { name: 'Essence', category: 'Moda', floor: 'Piso 2', description: 'Perfumería y cosméticos' },
-];
+const storeModules = import.meta.glob('../content/stores/*.md', { eager: true });
+const stores = Object.values(storeModules).map((m) => m.frontmatter);
 
 const categories = ['Todos', 'Moda', 'Comidas', 'Entretenimiento', 'Servicios'];
 ---

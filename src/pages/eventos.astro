@@ -2,20 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import EventCard from '../components/EventCard.astro';
 
-const events = [
-  {
-    title: 'Feria de la Moda – Colección Otoño',
-    date: '2025-05-10',
-    description:
-      'Las mejores marcas del centro comercial presentan sus nuevas colecciones de temporada. Desfiles, descuentos exclusivos y sorpresas para los asistentes. Entrada libre.',
-  },
-  {
-    title: 'Festival Gastronómico Bolívar Plaza',
-    date: '2025-06-07',
-    description:
-      'Una experiencia culinaria única con los mejores restaurantes del mall. Degustaciones, showcooking en vivo y concursos de recetas. ¡No te lo pierdas!',
-  },
-];
+const eventModules = import.meta.glob('../content/events/*.md', { eager: true });
+const events = Object.values(eventModules)
+  .map((m) => m.frontmatter)
+  .filter((e) => e.active !== false)
+  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 ---
 
 <Layout
