@@ -1,8 +1,8 @@
 {
-  "title": "¡Ofertas de temporada!",
-  "body": "Descubre las mejores promociones de nuestras tiendas. Esta semana, descuentos especiales en moda y restaurantes.",
-  "button_label": "Ver promociones",
-  "button_url": "/directorio",
-  "image": "",
+  "title": "",
+  "body": "",
+  "button_label": "Ver eventos",
+  "button_url": "/eventos",
+  "image": "/uploads/aventura-natural-popup.jpg",
   "active": true
 }

@@ -1,28 +1,41 @@
 ---
 const {
-  title = '¡Promoción Especial!',
-  body = 'Aprovecha nuestras ofertas exclusivas este fin de semana.',
+  title = '',
+  body = '',
   buttonLabel = 'Ver ofertas',
   buttonUrl = '/directorio',
   image = '',
   active = true,
 } = Astro.props;
+
+const imageOnly = image && !title;
 ---
 
 {active && (
-  <div class="popup-overlay" id="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title">
-    <div class="popup-box">
+  <div class="popup-overlay" id="popup-overlay" role="dialog" aria-modal="true" aria-label="Aviso promocional">
+    <div class={`popup-box${imageOnly ? ' popup-image-only' : ''}`}>
       <button class="popup-close" id="popup-close" aria-label="Cerrar aviso">&times;</button>
-      {image && (
-        <div class="popup-image">
-          <img src={image} alt={title} loading="eager" />
-        </div>
+
+      {imageOnly ? (
+        /* ── Image-only mode: full image, clickable ── */
+        <a href={buttonUrl} class="popup-img-link">
+          <img src={image} alt="Promoción Bolívar Plaza" loading="eager" />
+        </a>
+      ) : (
+        /* ── Standard mode: optional image + text ── */
+        <>
+          {image && (
+            <div class="popup-image">
+              <img src={image} alt={title} loading="eager" />
+            </div>
+          )}
+          <div class="popup-content">
+            <h2 class="popup-title" id="popup-title">{title}</h2>
+            {body && <p class="popup-body">{body}</p>}
+            <a href={buttonUrl} class="btn btn-primary popup-cta">{buttonLabel}</a>
+          </div>
+        </>
       )}
-      <div class="popup-content">
-        <h2 class="popup-title" id="popup-title">{title}</h2>
-        <p class="popup-body">{body}</p>
-        <a href={buttonUrl} class="btn btn-primary popup-cta">{buttonLabel}</a>
-      </div>
     </div>
   </div>
 )}
@@ -53,7 +66,7 @@ const {
   .popup-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.55);
+    background: rgba(0,0,0,0.65);
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -66,6 +79,7 @@ const {
     animation: fadeOut 0.25s ease forwards;
   }
 
+  /* Base box */
   .popup-box {
     background: var(--white);
     border-radius: 14px;
@@ -73,7 +87,7 @@ const {
     width: 100%;
     overflow: hidden;
     position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
     animation: slideUp 0.28s ease;
   }
 
@@ -81,16 +95,36 @@ const {
     animation: slideDown 0.25s ease forwards;
   }
 
+  /* Image-only variant — taller, no padding */
+  .popup-image-only {
+    max-width: 420px;
+    background: transparent;
+    border-radius: 16px;
+  }
+
+  .popup-img-link {
+    display: block;
+    line-height: 0;
+  }
+
+  .popup-img-link img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 16px;
+  }
+
+  /* Close button */
   .popup-close {
     position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    background: rgba(0,0,0,0.12);
+    top: 0.6rem;
+    right: 0.6rem;
+    background: rgba(0,0,0,0.45);
     border: none;
     color: var(--white);
-    font-size: 1.4rem;
-    width: 32px;
-    height: 32px;
+    font-size: 1.3rem;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
@@ -101,8 +135,9 @@ const {
     transition: background var(--transition);
   }
 
-  .popup-close:hover { background: rgba(0,0,0,0.28); }
+  .popup-close:hover { background: rgba(0,0,0,0.7); }
 
+  /* Standard mode image strip */
   .popup-image {
     height: 200px;
     background: var(--navy);
@@ -115,6 +150,7 @@ const {
     object-fit: cover;
   }
 
+  /* Standard mode text */
   .popup-content {
     padding: 1.75rem 1.75rem 2rem;
     display: flex;
