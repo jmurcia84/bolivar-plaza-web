@@ -47,19 +47,118 @@ const jsonLd = {
 >
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-overlay"></div>
-    <div class="container hero-content">
-      <p class="hero-eyebrow">Bienvenido a</p>
-      <h1 class="hero-title">Bolívar <span>Plaza</span></h1>
-      <p class="hero-sub">Tu destino favorito en Pereira. Moda, comida, entretenimiento y más, todo en un solo lugar.</p>
-      <div class="hero-actions">
-        <a href="/directorio" class="btn btn-primary">Ver tiendas</a>
-        <a href="/eventos" class="btn btn-outline-white">Eventos</a>
+  <!-- Hero Slider -->
+  <section class="hero" id="hero-slider" aria-label="Carrusel de bienvenida" aria-roledescription="carousel">
+    <div class="slides-track" id="slides-track">
+
+      <div class="slide slide-1 active" role="group" aria-roledescription="slide" aria-label="Diapositiva 1 de 3">
+        <div class="slide-overlay"></div>
+        <div class="container slide-content">
+          <p class="hero-eyebrow">Bienvenido a</p>
+          <h1 class="hero-title">Bolívar <span>Plaza</span></h1>
+          <p class="hero-sub">Tu destino favorito en Pereira. Moda, comida, entretenimiento y más, todo en un solo lugar.</p>
+          <div class="hero-actions">
+            <a href="/directorio" class="btn btn-primary">Ver tiendas</a>
+            <a href="/eventos" class="btn btn-outline-white">Eventos</a>
+          </div>
+        </div>
       </div>
+
+      <div class="slide slide-2" role="group" aria-roledescription="slide" aria-label="Diapositiva 2 de 3">
+        <div class="slide-overlay"></div>
+        <div class="container slide-content">
+          <p class="hero-eyebrow">Zona de comidas</p>
+          <h2 class="hero-title">Sabores para <span>todos</span></h2>
+          <p class="hero-sub">McDonald's, Ristretto, Qbano y más. Una experiencia gastronómica completa bajo un mismo techo.</p>
+          <div class="hero-actions">
+            <a href="/directorio?cat=Comidas" class="btn btn-primary">Ver restaurantes</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide slide-3" role="group" aria-roledescription="slide" aria-label="Diapositiva 3 de 3">
+        <div class="slide-overlay"></div>
+        <div class="container slide-content">
+          <p class="hero-eyebrow">Entretenimiento</p>
+          <h2 class="hero-title">Diversión sin <span>límites</span></h2>
+          <p class="hero-sub">Royal Films y Play Point te esperan. Planes increíbles para toda la familia en Pereira.</p>
+          <div class="hero-actions">
+            <a href="/eventos" class="btn btn-primary">Ver eventos</a>
+            <a href="/directorio" class="btn btn-outline-white">Directorio</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Prev / Next -->
+    <button class="slider-btn slider-prev" id="slider-prev" aria-label="Diapositiva anterior">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <button class="slider-btn slider-next" id="slider-next" aria-label="Siguiente diapositiva">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </button>
+
+    <!-- Dots -->
+    <div class="slider-dots" role="tablist" aria-label="Seleccionar diapositiva">
+      <button class="dot active" role="tab" aria-selected="true" aria-label="Ir a diapositiva 1" data-index="0"></button>
+      <button class="dot" role="tab" aria-selected="false" aria-label="Ir a diapositiva 2" data-index="1"></button>
+      <button class="dot" role="tab" aria-selected="false" aria-label="Ir a diapositiva 3" data-index="2"></button>
     </div>
   </section>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.getElementById('slider-prev');
+    const nextBtn = document.getElementById('slider-next');
+    let current = 0;
+    let timer;
+
+    function goTo(index: number) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      dots[current].setAttribute('aria-selected', 'false');
+      current = (index + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+      dots[current].setAttribute('aria-selected', 'true');
+    }
+
+    function startAuto() {
+      timer = setInterval(() => goTo(current + 1), 5000);
+    }
+
+    function resetAuto() {
+      clearInterval(timer);
+      startAuto();
+    }
+
+    prevBtn?.addEventListener('click', () => { goTo(current - 1); resetAuto(); });
+    nextBtn?.addEventListener('click', () => { goTo(current + 1); resetAuto(); });
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => { goTo(Number(dot.dataset.index)); resetAuto(); });
+    });
+
+    // Swipe support
+    let touchStartX = 0;
+    const hero = document.getElementById('hero-slider');
+    hero?.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    hero?.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 40) { goTo(dx < 0 ? current + 1 : current - 1); resetAuto(); }
+    });
+
+    // Pause on hover
+    hero?.addEventListener('mouseenter', () => clearInterval(timer));
+    hero?.addEventListener('mouseleave', startAuto);
+
+    startAuto();
+  </script>
 
   <!-- Hours -->
   <section class="section section-gray">
@@ -149,34 +248,70 @@ const jsonLd = {
 </Layout>
 
 <style>
-  /* Hero */
+  /* ── Hero Slider ── */
   .hero {
     position: relative;
     min-height: 560px;
-    display: flex;
-    align-items: center;
-    background: linear-gradient(135deg, #0f2447 0%, #1A3C6E 55%, #1e4d8c 100%);
     overflow: hidden;
+    user-select: none;
   }
 
-  .hero::before {
+  .slides-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+  }
+
+  /* Individual slides */
+  .slide {
+    position: absolute;
+    inset: 0;
+    min-height: 560px;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.75s ease;
+    pointer-events: none;
+  }
+
+  .slide.active {
+    opacity: 1;
+    position: relative;
+    pointer-events: auto;
+  }
+
+  /* Slide backgrounds */
+  .slide-1 {
+    background: linear-gradient(135deg, #0f2447 0%, #1A3C6E 55%, #1e4d8c 100%);
+  }
+
+  .slide-1::before {
     content: '';
     position: absolute;
     inset: 0;
     background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
-  .hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, rgba(15,36,71,0.6) 0%, transparent 70%);
+  .slide-2 {
+    background: linear-gradient(135deg, #3d1a00 0%, #7b3800 55%, #a35000 100%);
   }
 
-  .hero-content {
+  .slide-3 {
+    background: linear-gradient(135deg, #0a2a1a 0%, #1a5c3a 55%, #1e7045 100%);
+  }
+
+  .slide-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.55) 0%, transparent 70%);
+  }
+
+  .slide-content {
     position: relative;
     z-index: 1;
     padding-top: 4rem;
-    padding-bottom: 4rem;
+    padding-bottom: 5rem;
     max-width: 640px;
   }
 
@@ -224,6 +359,68 @@ const jsonLd = {
   .btn-outline-white:hover {
     border-color: var(--white);
     background: rgba(255,255,255,0.1);
+  }
+
+  /* Prev / Next buttons */
+  .slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.25);
+    color: var(--white);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition);
+    backdrop-filter: blur(4px);
+  }
+
+  .slider-btn:hover {
+    background: rgba(232,160,32,0.85);
+    border-color: var(--gold);
+    color: var(--navy);
+  }
+
+  .slider-prev { left: 1.1rem; }
+  .slider-next { right: 1.1rem; }
+
+  @media (min-width: 768px) {
+    .slider-prev { left: 2rem; }
+    .slider-next { right: 2rem; }
+  }
+
+  /* Dots */
+  .slider-dots {
+    position: absolute;
+    bottom: 1.4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.6);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: background var(--transition), border-color var(--transition), transform var(--transition);
+  }
+
+  .dot.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    transform: scale(1.25);
   }
 
   /* Hours */
