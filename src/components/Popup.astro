@@ -1,41 +1,15 @@
 ---
 const {
-  title = '',
-  body = '',
-  buttonLabel = 'Ver ofertas',
-  buttonUrl = '/directorio',
   image = '',
   active = true,
 } = Astro.props;
-
-const imageOnly = image && !title;
 ---
 
-{active && (
+{active && image && (
   <div class="popup-overlay" id="popup-overlay" role="dialog" aria-modal="true" aria-label="Aviso promocional">
-    <div class={`popup-box${imageOnly ? ' popup-image-only' : ''}`}>
+    <div class="popup-box">
       <button class="popup-close" id="popup-close" aria-label="Cerrar aviso">&times;</button>
-
-      {imageOnly ? (
-        /* ── Image-only mode: full image, clickable ── */
-        <a href={buttonUrl} class="popup-img-link">
-          <img src={image} alt="Promoción Bolívar Plaza" loading="eager" />
-        </a>
-      ) : (
-        /* ── Standard mode: optional image + text ── */
-        <>
-          {image && (
-            <div class="popup-image">
-              <img src={image} alt={title} loading="eager" />
-            </div>
-          )}
-          <div class="popup-content">
-            <h2 class="popup-title" id="popup-title">{title}</h2>
-            {body && <p class="popup-body">{body}</p>}
-            <a href={buttonUrl} class="btn btn-primary popup-cta">{buttonLabel}</a>
-          </div>
-        </>
-      )}
+      <img src={image} alt="Promoción Bolívar Plaza" loading="eager" class="popup-img" />
     </div>
   </div>
 )}
@@ -66,7 +40,7 @@ const imageOnly = image && !title;
   .popup-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.65);
+    background: rgba(0, 0, 0, 0.7);
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -79,52 +53,37 @@ const imageOnly = image && !title;
     animation: fadeOut 0.25s ease forwards;
   }
 
-  /* Base box */
   .popup-box {
-    background: var(--white);
-    border-radius: 14px;
-    max-width: 480px;
-    width: 100%;
-    overflow: hidden;
     position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    max-width: 500px;
+    width: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     animation: slideUp 0.28s ease;
+    line-height: 0;
   }
 
   .closing .popup-box {
     animation: slideDown 0.25s ease forwards;
   }
 
-  /* Image-only variant — taller, no padding */
-  .popup-image-only {
-    max-width: 420px;
-    background: transparent;
-    border-radius: 16px;
-  }
-
-  .popup-img-link {
-    display: block;
-    line-height: 0;
-  }
-
-  .popup-img-link img {
+  .popup-img {
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 16px;
   }
 
-  /* Close button */
   .popup-close {
     position: absolute;
     top: 0.6rem;
     right: 0.6rem;
-    background: rgba(0,0,0,0.45);
+    background: rgba(0, 0, 0, 0.5);
     border: none;
-    color: var(--white);
+    color: #fff;
     font-size: 1.3rem;
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
@@ -132,64 +91,28 @@ const imageOnly = image && !title;
     justify-content: center;
     line-height: 1;
     z-index: 2;
-    transition: background var(--transition);
+    transition: background 0.2s ease;
   }
 
-  .popup-close:hover { background: rgba(0,0,0,0.7); }
-
-  /* Standard mode image strip */
-  .popup-image {
-    height: 200px;
-    background: var(--navy);
-    overflow: hidden;
-  }
-
-  .popup-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Standard mode text */
-  .popup-content {
-    padding: 1.75rem 1.75rem 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-    align-items: flex-start;
-  }
-
-  .popup-title {
-    font-size: 1.4rem;
-    color: var(--navy);
-    font-weight: 700;
-  }
-
-  .popup-body {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
-
-  .popup-cta { align-self: flex-start; }
+  .popup-close:hover { background: rgba(0, 0, 0, 0.75); }
 
   @keyframes fadeIn {
     from { opacity: 0; }
-    to { opacity: 1; }
+    to   { opacity: 1; }
   }
 
   @keyframes fadeOut {
     from { opacity: 1; }
-    to { opacity: 0; }
+    to   { opacity: 0; }
   }
 
   @keyframes slideUp {
-    from { transform: translateY(24px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
   }
 
   @keyframes slideDown {
-    from { transform: translateY(0); opacity: 1; }
-    to { transform: translateY(16px); opacity: 0; }
+    from { transform: translateY(0);    opacity: 1; }
+    to   { transform: translateY(16px); opacity: 0; }
   }
 </style>
