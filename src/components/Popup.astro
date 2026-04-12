@@ -1,0 +1,159 @@
+---
+const {
+  title = '¡Promoción Especial!',
+  body = 'Aprovecha nuestras ofertas exclusivas este fin de semana.',
+  buttonLabel = 'Ver ofertas',
+  buttonUrl = '/directorio',
+  image = '',
+  active = true,
+} = Astro.props;
+---
+
+{active && (
+  <div class="popup-overlay" id="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+    <div class="popup-box">
+      <button class="popup-close" id="popup-close" aria-label="Cerrar aviso">&times;</button>
+      {image && (
+        <div class="popup-image">
+          <img src={image} alt={title} loading="eager" />
+        </div>
+      )}
+      <div class="popup-content">
+        <h2 class="popup-title" id="popup-title">{title}</h2>
+        <p class="popup-body">{body}</p>
+        <a href={buttonUrl} class="btn btn-primary popup-cta">{buttonLabel}</a>
+      </div>
+    </div>
+  </div>
+)}
+
+<script>
+  const overlay = document.getElementById('popup-overlay');
+  const closeBtn = document.getElementById('popup-close');
+
+  function closePopup() {
+    if (overlay) {
+      overlay.classList.add('closing');
+      setTimeout(() => overlay.remove(), 260);
+    }
+  }
+
+  closeBtn?.addEventListener('click', closePopup);
+
+  overlay?.addEventListener('click', (e) => {
+    if (e.target === overlay) closePopup();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closePopup();
+  });
+</script>
+
+<style>
+  .popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .popup-overlay.closing {
+    animation: fadeOut 0.25s ease forwards;
+  }
+
+  .popup-box {
+    background: var(--white);
+    border-radius: 14px;
+    max-width: 480px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: slideUp 0.28s ease;
+  }
+
+  .closing .popup-box {
+    animation: slideDown 0.25s ease forwards;
+  }
+
+  .popup-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: rgba(0,0,0,0.12);
+    border: none;
+    color: var(--white);
+    font-size: 1.4rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    z-index: 2;
+    transition: background var(--transition);
+  }
+
+  .popup-close:hover { background: rgba(0,0,0,0.28); }
+
+  .popup-image {
+    height: 200px;
+    background: var(--navy);
+    overflow: hidden;
+  }
+
+  .popup-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .popup-content {
+    padding: 1.75rem 1.75rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    align-items: flex-start;
+  }
+
+  .popup-title {
+    font-size: 1.4rem;
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  .popup-body {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .popup-cta { align-self: flex-start; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(24px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes slideDown {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(16px); opacity: 0; }
+  }
+</style>

@@ -1,0 +1,125 @@
+---
+import Layout from '../layouts/Layout.astro';
+import EventCard from '../components/EventCard.astro';
+
+const events = [
+  {
+    title: 'Feria de la Moda – Colección Otoño',
+    date: '2025-05-10',
+    description:
+      'Las mejores marcas del centro comercial presentan sus nuevas colecciones de temporada. Desfiles, descuentos exclusivos y sorpresas para los asistentes. Entrada libre.',
+  },
+  {
+    title: 'Festival Gastronómico Bolívar Plaza',
+    date: '2025-06-07',
+    description:
+      'Una experiencia culinaria única con los mejores restaurantes del mall. Degustaciones, showcooking en vivo y concursos de recetas. ¡No te lo pierdas!',
+  },
+];
+---
+
+<Layout
+  title="Eventos – Bolívar Plaza"
+  description="Conoce los próximos eventos, actividades y promociones de Centro Comercial Bolívar Plaza en Pereira."
+>
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Próximos <span>Eventos</span></h1>
+      <p>Actividades, ferias y entretenimiento para toda la familia</p>
+    </div>
+  </section>
+
+  <!-- Events Grid -->
+  <section class="section">
+    <div class="container">
+      {events.length > 0
+        ? (
+          <div class="grid-cards events-grid">
+            {events.map((event) => (
+              <EventCard {...event} />
+            ))}
+          </div>
+        )
+        : (
+          <p class="no-events">No hay eventos programados en este momento. ¡Vuelve pronto!</p>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="cta-banner section-gray section">
+    <div class="container cta-inner">
+      <div>
+        <h2>¿Quieres organizar un evento aquí?</h2>
+        <p>Disponemos de espacios para ferias, lanzamientos y activaciones de marca.</p>
+      </div>
+      <a href="/contacto" class="btn btn-primary">Contáctanos</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 3rem 0 2.5rem;
+    text-align: center;
+  }
+
+  .page-header h1 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header h1 span { color: var(--gold); }
+
+  .page-header p {
+    color: rgba(255,255,255,0.72);
+    font-size: 1rem;
+  }
+
+  .events-grid {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 640px) {
+    .events-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .events-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .no-events {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 3rem 0;
+    font-size: 1.05rem;
+  }
+
+  .cta-banner {
+    background: var(--gray-light);
+  }
+
+  .cta-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .cta-inner h2 {
+    font-size: 1.3rem;
+    color: var(--navy);
+    margin-bottom: 0.35rem;
+  }
+
+  .cta-inner p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+</style>

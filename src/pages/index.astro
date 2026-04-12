@@ -1,17 +1,309 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import StoreCard from '../components/StoreCard.astro';
+import Popup from '../components/Popup.astro';
 
+const featuredStores = [
+  { name: "McDonald's", category: 'Comidas', floor: 'Piso 1', description: 'Hamburguesas, papas y más' },
+  { name: 'Cruz Verde', category: 'Servicios', floor: 'Piso 1', description: 'Farmacia y droguería' },
+  { name: 'Royal Films', category: 'Entretenimiento', floor: 'Piso 2', description: 'Cine multiplex' },
+  { name: 'Stop Jeans', category: 'Moda', floor: 'Piso 1', description: 'Ropa casual y denim' },
+  { name: 'Ristretto', category: 'Comidas', floor: 'Piso 1', description: 'Café y bebidas especiales' },
+  { name: 'Essence', category: 'Moda', floor: 'Piso 2', description: 'Perfumería y cosméticos' },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ShoppingCenter',
+  name: 'Centro Comercial Bolívar Plaza',
+  description: 'Centro comercial en Pereira, Risaralda con tiendas de moda, restaurantes, entretenimiento y servicios.',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Cra 8 N 19-41',
+    addressLocality: 'Pereira',
+    addressRegion: 'Risaralda',
+    addressCountry: 'CO',
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+      opens: '09:00',
+      closes: '19:00',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Sunday'],
+      opens: '11:00',
+      closes: '16:00',
+    },
+  ],
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout
+  title="Bolívar Plaza – Centro Comercial en Pereira, Risaralda"
+  description="Visita Centro Comercial Bolívar Plaza en Pereira. Más de 50 tiendas, restaurantes, cine y entretenimiento. Cra 8 N 19-41."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <p class="hero-eyebrow">Bienvenido a</p>
+      <h1 class="hero-title">Bolívar <span>Plaza</span></h1>
+      <p class="hero-sub">Tu destino favorito en Pereira. Moda, comida, entretenimiento y más, todo en un solo lugar.</p>
+      <div class="hero-actions">
+        <a href="/directorio" class="btn btn-primary">Ver tiendas</a>
+        <a href="/eventos" class="btn btn-outline-white">Eventos</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hours -->
+  <section class="section section-gray">
+    <div class="container">
+      <h2 class="section-title">Horario de <span>atención</span></h2>
+      <div class="hours-grid">
+        <div class="hours-card">
+          <div class="hours-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div>
+            <p class="hours-label">Lunes – Sábado</p>
+            <p class="hours-time">9:00 am – 7:00 pm</p>
+          </div>
+        </div>
+        <div class="hours-card">
+          <div class="hours-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div>
+            <p class="hours-label">Domingos y festivos</p>
+            <p class="hours-time">11:00 am – 4:00 pm</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Stores -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Nuestras <span>Tiendas</span></h2>
+      <div class="grid-cards">
+        {featuredStores.map((store) => (
+          <StoreCard {...store} />
+        ))}
+      </div>
+      <div class="stores-cta">
+        <a href="/directorio" class="btn btn-outline">Ver directorio completo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Us -->
+  <section class="section section-gray">
+    <div class="container">
+      <h2 class="section-title">¿Por qué visitarnos?</h2>
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon">🛍️</div>
+          <h3>+50 tiendas</h3>
+          <p>Moda, tecnología, hogar, servicios y mucho más reunidos en un solo lugar.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🍔</div>
+          <h3>Zona de comidas</h3>
+          <p>Disfruta de una amplia variedad gastronómica para todos los gustos.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🎬</div>
+          <h3>Entretenimiento</h3>
+          <p>Cine, zona de juegos y eventos especiales para toda la familia.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🅿️</div>
+          <h3>Parqueadero</h3>
+          <p>Amplio estacionamiento con fácil acceso para tu comodidad.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popup -->
+  <Popup
+    title="¡Ofertas de temporada!"
+    body="Descubre las mejores promociones de nuestras tiendas. Esta semana, descuentos especiales en moda y restaurantes."
+    buttonLabel="Ver promociones"
+    buttonUrl="/directorio"
+    active={true}
+  />
+</Layout>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    min-height: 560px;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #0f2447 0%, #1A3C6E 55%, #1e4d8c 100%);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(15,36,71,0.6) 0%, transparent 70%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    max-width: 640px;
+  }
+
+  .hero-eyebrow {
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    color: var(--white);
+    line-height: 1.05;
+    margin-bottom: 1rem;
+  }
+
+  .hero-title span { color: var(--gold); }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.65;
+    max-width: 480px;
+    margin-bottom: 2rem;
+  }
+
+  .hero-actions { display: flex; gap: 0.85rem; flex-wrap: wrap; }
+
+  .btn-outline-white {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.7rem 1.6rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: 2px solid rgba(255,255,255,0.55);
+    color: var(--white);
+    background: transparent;
+    transition: border-color var(--transition), background var(--transition);
+  }
+
+  .btn-outline-white:hover {
+    border-color: var(--white);
+    background: rgba(255,255,255,0.1);
+  }
+
+  /* Hours */
+  .hours-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 540px) {
+    .hours-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .hours-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--gold);
+  }
+
+  .hours-icon { color: var(--navy); flex-shrink: 0; }
+
+  .hours-label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+  }
+
+  .hours-time {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  /* Stores CTA */
+  .stores-cta {
+    text-align: center;
+    margin-top: 2.5rem;
+  }
+
+  /* Features */
+  .features-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 768px) {
+    .features-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .feature {
+    text-align: center;
+    padding: 1.75rem 1rem;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  .feature-icon {
+    font-size: 2.2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .feature h3 {
+    font-size: 1rem;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+  }
+
+  .feature p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+</style>

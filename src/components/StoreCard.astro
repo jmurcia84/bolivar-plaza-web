@@ -1,0 +1,116 @@
+---
+const { name, category, floor, description, logo } = Astro.props;
+
+const categoryColors = {
+  Moda: { bg: '#EBF4FF', color: '#1A3C6E' },
+  Comidas: { bg: '#FFF3E0', color: '#E65100' },
+  Entretenimiento: { bg: '#F3E5F5', color: '#6A1B9A' },
+  Servicios: { bg: '#E8F5E9', color: '#2E7D32' },
+};
+
+const cat = categoryColors[category] ?? { bg: '#F4F6F9', color: '#5a6475' };
+---
+
+<article class="store-card">
+  <div class="store-logo">
+    {logo
+      ? <img src={logo} alt={`Logo de ${name}`} loading="lazy" />
+      : <span class="logo-placeholder">{name.charAt(0)}</span>
+    }
+  </div>
+  <div class="store-info">
+    <h3 class="store-name">{name}</h3>
+    <div class="store-meta">
+      <span class="badge" style={`background:${cat.bg};color:${cat.color}`}>{category}</span>
+      <span class="floor">{floor}</span>
+    </div>
+    {description && <p class="store-desc">{description}</p>}
+  </div>
+</article>
+
+<style>
+  .store-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: box-shadow var(--transition), transform var(--transition);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .store-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-3px);
+  }
+
+  .store-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 130px;
+    background: var(--gray-light);
+    overflow: hidden;
+  }
+
+  .store-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .logo-placeholder {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--gold);
+    font-size: 2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .store-info {
+    padding: 1.1rem 1.25rem 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .store-name {
+    font-size: 1.05rem;
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  .store-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+  }
+
+  .floor {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .store-desc {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-top: 0.1rem;
+  }
+</style>

@@ -1,0 +1,163 @@
+---
+const navLinks = [
+  { href: '/', label: 'Inicio' },
+  { href: '/directorio', label: 'Directorio' },
+  { href: '/eventos', label: 'Eventos' },
+  { href: '/contacto', label: 'Contacto' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo" aria-label="Bolívar Plaza – Inicio">
+      <span class="logo-main">Bolívar</span><span class="logo-accent"> Plaza</span>
+    </a>
+
+    <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+      {navLinks.map(({ href, label }) => (
+        <a
+          href={href}
+          class={`nav-link ${currentPath === href || (href !== '/' && currentPath.startsWith(href)) ? 'active' : ''}`}
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
+
+    <button
+      class="hamburger"
+      id="hamburger"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+      aria-controls="main-nav"
+    >
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const nav = document.getElementById('main-nav');
+
+  hamburger?.addEventListener('click', () => {
+    const isOpen = nav?.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', String(isOpen));
+    hamburger.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+    hamburger.classList.toggle('active', isOpen);
+  });
+
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (!hamburger?.contains(e.target) && !nav?.contains(e.target)) {
+      nav?.classList.remove('open');
+      hamburger?.setAttribute('aria-expanded', 'false');
+      hamburger?.classList.remove('active');
+    }
+  });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--navy);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-size: 1.35rem;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .logo-main { color: var(--white); }
+  .logo-accent { color: var(--gold); }
+
+  .main-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    color: rgba(255,255,255,0.85);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 6px;
+    transition: color var(--transition), background var(--transition);
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--gold);
+    background: rgba(255,255,255,0.06);
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 6px;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: transform 0.22s ease, opacity 0.22s ease;
+    transform-origin: center;
+  }
+
+  .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  @media (max-width: 767px) {
+    .hamburger { display: flex; }
+
+    .main-nav {
+      display: none;
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      background: var(--navy);
+      padding: 0.75rem 1rem 1rem;
+      gap: 0.25rem;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.22);
+    }
+
+    .main-nav.open { display: flex; }
+
+    .nav-link {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+    }
+  }
+</style>

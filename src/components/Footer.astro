@@ -1,0 +1,163 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="footer-logo">Bolívar <span>Plaza</span></a>
+      <p class="footer-tagline">Tu destino de compras en Pereira</p>
+    </div>
+
+    <div class="footer-info">
+      <h3>Horarios</h3>
+      <ul>
+        <li><span>Lunes – Sábado</span><span>9:00 am – 7:00 pm</span></li>
+        <li><span>Domingos y festivos</span><span>11:00 am – 4:00 pm</span></li>
+      </ul>
+    </div>
+
+    <div class="footer-contact">
+      <h3>Contacto</h3>
+      <address>
+        <p>Cra 8 N 19-41, Pereira<br />Risaralda, Colombia</p>
+        <p><a href="tel:+576XXXXXXXX">(606) 000-0000</a></p>
+        <p><a href="mailto:info@bolivarplaza.com">info@bolivarplaza.com</a></p>
+      </address>
+    </div>
+
+    <div class="footer-social">
+      <h3>Síguenos</h3>
+      <div class="social-links">
+        <a href="#" aria-label="Facebook de Bolívar Plaza" class="social-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="Instagram de Bolívar Plaza" class="social-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; {year} Centro Comercial Bolívar Plaza. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.85);
+    margin-top: auto;
+  }
+
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .footer-inner { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .footer-inner { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .footer-logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--white);
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-logo span { color: var(--gold); }
+
+  .footer-tagline {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .footer-info h3,
+  .footer-contact h3,
+  .footer-social h3 {
+    color: var(--gold);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.85rem;
+  }
+
+  .footer-info ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .footer-info li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .footer-info li span:first-child { color: rgba(255,255,255,0.7); }
+  .footer-info li span:last-child { font-weight: 600; color: var(--white); }
+
+  address {
+    font-style: normal;
+    font-size: 0.875rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  address a {
+    color: rgba(255,255,255,0.85);
+    transition: color var(--transition);
+  }
+
+  address a:hover { color: var(--gold); }
+
+  .social-links {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    color: var(--white);
+    transition: background var(--transition), color var(--transition);
+  }
+
+  .social-icon:hover {
+    background: var(--gold);
+    color: var(--navy);
+  }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.45);
+  }
+</style>

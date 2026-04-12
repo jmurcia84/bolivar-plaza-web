@@ -1,0 +1,72 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: public/uploads
+public_folder: /uploads
+
+locale: es
+
+collections:
+  - name: stores
+    label: Tiendas
+    label_singular: Tienda
+    folder: src/content/stores
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Nombre, name: name, widget: string }
+      - label: Categoría
+        name: category
+        widget: select
+        options: [Moda, Comidas, Entretenimiento, Servicios]
+      - label: Piso
+        name: floor
+        widget: select
+        options: [Piso 1, Piso 2, Piso 3]
+      - { label: Descripción corta, name: description, widget: text }
+      - { label: Logo, name: logo, widget: image, required: false }
+
+  - name: events
+    label: Eventos
+    label_singular: Evento
+    folder: src/content/events
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Título, name: title, widget: string }
+      - { label: Fecha, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+      - { label: Descripción, name: description, widget: text }
+      - { label: Imagen, name: image, widget: image, required: false }
+      - { label: Activo, name: active, widget: boolean, default: true }
+
+  - name: popup
+    label: Pop-up promocional
+    label_singular: Pop-up
+    files:
+      - label: Configuración del pop-up
+        name: popup
+        file: src/content/popup.json
+        fields:
+          - { label: Título, name: title, widget: string }
+          - { label: Cuerpo, name: body, widget: text }
+          - { label: Texto del botón, name: button_label, widget: string }
+          - { label: URL del botón, name: button_url, widget: string }
+          - { label: Imagen, name: image, widget: image, required: false }
+          - { label: Activo, name: active, widget: boolean, default: true }
+
+  - name: settings
+    label: Configuración general
+    label_singular: Configuración
+    files:
+      - label: Ajustes del sitio
+        name: settings
+        file: src/content/settings.json
+        fields:
+          - { label: Título del hero, name: hero_title, widget: string }
+          - { label: Subtítulo del hero, name: hero_subtitle, widget: text }
+          - { label: Texto del CTA del hero, name: hero_cta_text, widget: string }
+          - { label: Teléfono, name: phone, widget: string }
+          - { label: Correo electrónico, name: email, widget: string }
+          - { label: URL de Facebook, name: facebook_url, widget: string, required: false }
+          - { label: URL de Instagram, name: instagram_url, widget: string, required: false }

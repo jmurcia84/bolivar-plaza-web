@@ -1,0 +1,119 @@
+---
+const { title, date, description, image } = Astro.props;
+
+const dateObj = new Date(date);
+const day = dateObj.toLocaleDateString('es-CO', { day: '2-digit' });
+const month = dateObj.toLocaleDateString('es-CO', { month: 'short' }).toUpperCase();
+const fullDate = dateObj.toLocaleDateString('es-CO', {
+  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+});
+---
+
+<article class="event-card">
+  <div class="event-image">
+    {image
+      ? <img src={image} alt={title} loading="lazy" />
+      : <div class="event-image-placeholder">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+    }
+    <div class="event-date-badge" aria-label={fullDate}>
+      <span class="date-day">{day}</span>
+      <span class="date-month">{month}</span>
+    </div>
+  </div>
+  <div class="event-body">
+    <h3 class="event-title">{title}</h3>
+    <time class="event-fulldate" datetime={date}>{fullDate}</time>
+    {description && <p class="event-desc">{description}</p>}
+  </div>
+</article>
+
+<style>
+  .event-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: box-shadow var(--transition), transform var(--transition);
+  }
+
+  .event-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-3px);
+  }
+
+  .event-image {
+    position: relative;
+    height: 180px;
+    background: var(--gray-mid);
+    overflow: hidden;
+  }
+
+  .event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .event-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(26,60,110,0.3);
+    background: linear-gradient(135deg, #dce7f5 0%, #e8edf5 100%);
+  }
+
+  .event-date-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--gold);
+    color: var(--navy);
+    border-radius: 8px;
+    padding: 0.4rem 0.7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    min-width: 48px;
+    text-align: center;
+  }
+
+  .date-day { font-size: 1.4rem; font-weight: 700; }
+  .date-month { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; margin-top: 2px; }
+
+  .event-body {
+    padding: 1.1rem 1.25rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .event-title {
+    font-size: 1.05rem;
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  .event-fulldate {
+    font-size: 0.8rem;
+    color: var(--gold);
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  .event-desc {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-top: 0.2rem;
+  }
+</style>
