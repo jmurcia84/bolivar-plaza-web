@@ -8,6 +8,20 @@ public_folder: /uploads
 locale: es
 
 collections:
+  - name: banners
+    label: Banners del slider
+    label_singular: Banner
+    folder: src/content/banners
+    create: true
+    slug: "{{slug}}"
+    media_folder: "public/uploads"
+    public_folder: "/uploads"
+    fields:
+      - { label: Título (opcional), name: title, widget: string, required: false }
+      - { label: Imagen, name: image, widget: image }
+      - { label: URL del enlace (opcional), name: link_url, widget: string, required: false }
+      - { label: Activo, name: active, widget: boolean, default: true }
+
   - name: stores
     label: Tiendas
     label_singular: Tienda
