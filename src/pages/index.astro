@@ -255,7 +255,8 @@ const jsonLd = {
   /* ── Hero Slider ── */
   .hero {
     position: relative;
-    min-height: 560px;
+    /* Fixed height: 56vw on mobile, capped at 600px on desktop */
+    height: clamp(280px, 56vw, 600px);
     overflow: hidden;
     user-select: none;
   }
@@ -264,14 +265,14 @@ const jsonLd = {
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: inherit;
   }
 
   /* Individual slides */
   .slide {
     position: absolute;
     inset: 0;
-    min-height: 560px;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     opacity: 0;
@@ -281,17 +282,15 @@ const jsonLd = {
 
   .slide.active {
     opacity: 1;
-    position: relative;
+    position: absolute;
     pointer-events: auto;
   }
 
-  /* Slide image fill */
+  /* Slide image fill – always crops to exact slider dimensions */
   .slide-inner {
-    display: flex;
+    display: block;
     width: 100%;
     height: 100%;
-    min-height: 560px;
-    align-items: stretch;
     overflow: hidden;
   }
 
