@@ -12,7 +12,7 @@ const currentPath = Astro.url.pathname;
 <header class="site-header">
   <div class="container header-inner">
     <a href="/" class="logo" aria-label="Bolívar Plaza – Inicio">
-      <span class="logo-main">Bolívar</span><span class="logo-accent"> Plaza</span>
+      <img src="/uploads/logo-bolivar-plaza.png" alt="Bolívar Plaza Centro Comercial" class="logo-img" />
     </a>
 
     <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
@@ -77,14 +77,20 @@ const currentPath = Astro.url.pathname;
   }
 
   .logo {
-    font-size: 1.35rem;
-    font-weight: 700;
-    white-space: nowrap;
+    display: flex;
+    align-items: center;
     flex-shrink: 0;
   }
 
-  .logo-main { color: var(--white); }
-  .logo-accent { color: var(--white); opacity: 0.88; }
+  .logo-img {
+    height: 40px;
+    width: auto;
+    display: block;
+  }
+
+  @media (min-width: 768px) {
+    .logo-img { height: 50px; }
+  }
 
   .main-nav {
     display: flex;
