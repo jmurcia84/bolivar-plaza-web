@@ -22,7 +22,7 @@ const {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap"
       rel="stylesheet"
     />
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
@@ -51,23 +51,25 @@ const {
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
       :root {
-        --navy: #1A3C6E;
-        --gold: #E8A020;
+        --navy: #276658;        /* dark green – headings, footer, dark elements */
+        --green: #8fc74a;       /* primary brand green – header, badges, accents */
+        --green-dark: #71b341;  /* hover states */
+        --gold: #d6a916;        /* secondary accent – gold/brown */
         --white: #FFFFFF;
-        --gray-light: #F4F6F9;
-        --gray-mid: #E2E6EC;
-        --text: #1a1a2e;
-        --text-muted: #5a6475;
-        --radius: 10px;
-        --shadow: 0 2px 12px rgba(26,60,110,0.10);
-        --shadow-hover: 0 6px 24px rgba(26,60,110,0.18);
+        --gray-light: #f0f0f2;
+        --gray-mid: #e5e5e5;
+        --text: #222226;
+        --text-muted: #595959;
+        --radius: 8px;
+        --shadow: 0 2px 12px rgba(39,102,88,0.10);
+        --shadow-hover: 0 6px 24px rgba(39,102,88,0.20);
         --transition: 0.22s ease;
       }
 
       html { scroll-behavior: smooth; }
 
       body {
-        font-family: 'Inter', system-ui, sans-serif;
+        font-family: 'Montserrat', system-ui, sans-serif;
         font-size: 16px;
         line-height: 1.6;
         color: var(--text);
@@ -106,10 +108,12 @@ const {
         color: var(--navy);
         margin-bottom: 2rem;
         text-align: center;
+        font-weight: 700;
+        letter-spacing: -0.01em;
       }
 
       .section-title span {
-        color: var(--gold);
+        color: var(--green);
       }
 
       .btn {
@@ -118,8 +122,10 @@ const {
         gap: 0.4rem;
         padding: 0.7rem 1.6rem;
         border-radius: var(--radius);
-        font-weight: 600;
-        font-size: 0.95rem;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
         cursor: pointer;
         transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
         border: none;
@@ -127,14 +133,14 @@ const {
       }
 
       .btn-primary {
-        background: var(--gold);
-        color: var(--navy);
+        background: var(--green);
+        color: var(--white);
       }
 
       .btn-primary:hover {
-        background: #d4901a;
+        background: var(--green-dark);
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(232,160,32,0.35);
+        box-shadow: 0 4px 14px rgba(143,199,74,0.4);
       }
 
       .btn-outline {
@@ -165,8 +171,13 @@ const {
 
       /* Focus visible */
       :focus-visible {
-        outline: 2px solid var(--gold);
+        outline: 2px solid var(--green);
         outline-offset: 2px;
+      }
+
+      ::selection {
+        background: var(--green);
+        color: var(--white);
       }
     </style>
   </body>

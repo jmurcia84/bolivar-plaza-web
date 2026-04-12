@@ -2,13 +2,13 @@
 const { name, category, floor, description, logo } = Astro.props;
 
 const categoryColors = {
-  Moda: { bg: '#EBF4FF', color: '#1A3C6E' },
-  Comidas: { bg: '#FFF3E0', color: '#E65100' },
-  Entretenimiento: { bg: '#F3E5F5', color: '#6A1B9A' },
-  Servicios: { bg: '#E8F5E9', color: '#2E7D32' },
+  Moda:           { bg: '#e8f5d6', color: '#276658' },
+  Comidas:        { bg: '#fdf3d0', color: '#8a6500' },
+  Entretenimiento:{ bg: '#d6f0eb', color: '#276658' },
+  Servicios:      { bg: '#f0f0f2', color: '#595959' },
 };
 
-const cat = categoryColors[category] ?? { bg: '#F4F6F9', color: '#5a6475' };
+const cat = categoryColors[category] ?? { bg: '#f0f0f2', color: '#595959' };
 ---
 
 <article class="store-card">
@@ -63,8 +63,8 @@ const cat = categoryColors[category] ?? { bg: '#F4F6F9', color: '#5a6475' };
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    background: var(--navy);
-    color: var(--gold);
+    background: var(--green);
+    color: var(--white);
     font-size: 2rem;
     font-weight: 700;
     display: flex;
