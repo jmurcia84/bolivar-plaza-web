@@ -8,6 +8,17 @@ const featuredStores = Object.values(storeModules)
   .map((m) => m.frontmatter)
   .slice(0, 6);
 
+const bannerModules = import.meta.glob('../content/banners/*.md', { eager: true });
+const banners = Object.values(bannerModules)
+  .map((m) => m.frontmatter)
+  .filter((b) => b.active !== false && b.image)
+  .sort((a, b) => {
+    // sort by filename via the module key
+    const keys = Object.keys(bannerModules);
+    return keys.findIndex(k => bannerModules[k].frontmatter === a) -
+           keys.findIndex(k => bannerModules[k].frontmatter === b);
+  });
+
 const popup = await import('../content/popup.json');
 const settings = await import('../content/settings.json');
 
@@ -50,54 +61,34 @@ const jsonLd = {
   <section class="hero" id="hero-slider" aria-label="Carrusel de bienvenida" aria-roledescription="carousel">
     <div class="slides-track" id="slides-track">
 
-      <div class="slide slide-1 active" role="group" aria-roledescription="slide" aria-label="Diapositiva 1 de 4">
-        <div class="slide-overlay"></div>
-        <div class="container slide-content">
-          <p class="hero-eyebrow">Bienvenido a</p>
-          <h1 class="hero-title">Bolívar <span>Plaza</span></h1>
-          <p class="hero-sub">Tu destino favorito en Pereira. Moda, comida, entretenimiento y más, todo en un solo lugar.</p>
-          <div class="hero-actions">
-            <a href="/directorio" class="btn btn-primary">Ver tiendas</a>
-            <a href="/eventos" class="btn btn-outline-white">Eventos</a>
-          </div>
+      {banners.map((banner, i) => (
+        <div
+          class:list={['slide', { active: i === 0 }]}
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`Diapositiva ${i + 1} de ${banners.length}`}
+        >
+          {banner.link_url ? (
+            <a href={banner.link_url} class="slide-inner">
+              <img
+                src={banner.image}
+                alt={banner.title || `Banner ${i + 1} – Bolívar Plaza`}
+                class="slide-bg-img"
+                loading={i === 0 ? 'eager' : 'lazy'}
+              />
+            </a>
+          ) : (
+            <div class="slide-inner">
+              <img
+                src={banner.image}
+                alt={banner.title || `Banner ${i + 1} – Bolívar Plaza`}
+                class="slide-bg-img"
+                loading={i === 0 ? 'eager' : 'lazy'}
+              />
+            </div>
+          )}
         </div>
-      </div>
-
-      <div class="slide slide-2" role="group" aria-roledescription="slide" aria-label="Diapositiva 2 de 4">
-        <div class="slide-overlay"></div>
-        <div class="container slide-content">
-          <p class="hero-eyebrow">Zona de comidas</p>
-          <h2 class="hero-title">Sabores para <span>todos</span></h2>
-          <p class="hero-sub">McDonald's, Ristretto, Qbano y más. Una experiencia gastronómica completa bajo un mismo techo.</p>
-          <div class="hero-actions">
-            <a href="/directorio?cat=Comidas" class="btn btn-primary">Ver restaurantes</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="slide slide-3" role="group" aria-roledescription="slide" aria-label="Diapositiva 3 de 4">
-        <div class="slide-overlay"></div>
-        <div class="container slide-content">
-          <p class="hero-eyebrow">Entretenimiento</p>
-          <h2 class="hero-title">Diversión sin <span>límites</span></h2>
-          <p class="hero-sub">Royal Films y Play Point te esperan. Planes increíbles para toda la familia en Pereira.</p>
-          <div class="hero-actions">
-            <a href="/eventos" class="btn btn-primary">Ver eventos</a>
-            <a href="/directorio" class="btn btn-outline-white">Directorio</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="slide slide-4" role="group" aria-roledescription="slide" aria-label="Diapositiva 4 de 4">
-        <a href="/eventos" class="slide-banner-link">
-          <img
-            src="/uploads/aventura-natural-banner.jpg"
-            alt="Aventura Natural – Eventos Bolívar Plaza"
-            class="slide-banner-img"
-            loading="eager"
-          />
-        </a>
-      </div>
+      ))}
 
     </div>
 
@@ -115,10 +106,15 @@ const jsonLd = {
 
     <!-- Dots -->
     <div class="slider-dots" role="tablist" aria-label="Seleccionar diapositiva">
-      <button class="dot active" role="tab" aria-selected="true" aria-label="Ir a diapositiva 1" data-index="0"></button>
-      <button class="dot" role="tab" aria-selected="false" aria-label="Ir a diapositiva 2" data-index="1"></button>
-      <button class="dot" role="tab" aria-selected="false" aria-label="Ir a diapositiva 3" data-index="2"></button>
-      <button class="dot" role="tab" aria-selected="false" aria-label="Ir a diapositiva 4" data-index="3"></button>
+      {banners.map((_, i) => (
+        <button
+          class:list={['dot', { active: i === 0 }]}
+          role="tab"
+          aria-selected={i === 0 ? 'true' : 'false'}
+          aria-label={`Ir a diapositiva ${i + 1}`}
+          data-index={i}
+        ></button>
+      ))}
     </div>
   </section>
 
@@ -130,7 +126,7 @@ const jsonLd = {
     let current = 0;
     let timer;
 
-    function goTo(index: number) {
+    function goTo(index) {
       slides[current].classList.remove('active');
       dots[current].classList.remove('active');
       dots[current].setAttribute('aria-selected', 'false');
@@ -289,55 +285,22 @@ const jsonLd = {
     pointer-events: auto;
   }
 
-  /* Slide backgrounds */
-  .slide-1 {
-    background: linear-gradient(135deg, #1a4a38 0%, #276658 55%, #2e7a68 100%);
-  }
-
-  .slide-1::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  }
-
-  .slide-2 {
-    background: linear-gradient(135deg, #5a7a20 0%, #71b341 55%, #8fc74a 100%);
-  }
-
-  .slide-3 {
-    background: linear-gradient(135deg, #7a6200 0%, #a88700 55%, #d6a916 100%);
-  }
-
-  /* Slide 4 – full image banner */
-  .slide-4 {
-    background: #000;
-    justify-content: center;
-    align-items: stretch;
-  }
-
-  .slide-banner-link {
+  /* Slide image fill */
+  .slide-inner {
     display: flex;
     width: 100%;
     height: 100%;
     min-height: 560px;
-    align-items: center;
-    justify-content: center;
+    align-items: stretch;
     overflow: hidden;
   }
 
-  .slide-banner-img {
+  .slide-bg-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
     display: block;
-  }
-
-  .slide-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, rgba(0,0,0,0.55) 0%, transparent 70%);
   }
 
   .slide-content {
