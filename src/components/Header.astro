@@ -20,7 +20,7 @@ const igUrl = settings.instagram_url || '#';
 <!-- Top bar – desktop only -->
 <div class="top-bar" aria-label="Horario del centro comercial">
   <div class="container top-bar-inner">
-    <span>{hoursWeekday}&nbsp;&nbsp;|&nbsp;&nbsp;{hoursWeekend}</span>
+    <span>Horarios: {hoursWeekday}&nbsp;&nbsp;|&nbsp;&nbsp;{hoursWeekend}</span>
   </div>
 </div>
 
@@ -95,9 +95,9 @@ const igUrl = settings.instagram_url || '#';
   /* ── Top bar ── */
   .top-bar {
     display: none;
-    background: #152d52;
-    color: rgba(255,255,255,0.88);
-    font-size: 0.78rem;
+    background: #000000;
+    color: #FFFFFF;
+    font-size: 13px;
     letter-spacing: 0.02em;
   }
 
@@ -187,14 +187,14 @@ const igUrl = settings.instagram_url || '#';
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: #E8A020;
+    background: #8fc74a;
     color: var(--white);
     transition: background var(--transition), transform var(--transition);
     flex-shrink: 0;
   }
 
   .social-btn:hover {
-    background: #c98a18;
+    background: #71b341;
     transform: scale(1.1);
   }
 

@@ -18,7 +18,7 @@ collections:
     slug: "{{slug}}"
     fields:
       - { label: Título (opcional), name: title, widget: string, required: false }
-      - { label: Imagen, name: image, widget: image }
+      - { label: Imagen, name: image, widget: image, hint: "JPG o PNG horizontal. Tamaño recomendado: 1920×800 px. Máx 2 MB." }
       - { label: URL del enlace (opcional), name: link_url, widget: string, required: false }
       - { label: Activo, name: active, widget: boolean, default: true }
 
@@ -31,7 +31,7 @@ collections:
     fields:
       - { label: Título, name: title, widget: string }
       - { label: Fecha, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
-      - { label: Imagen, name: image, widget: image, required: false }
+      - { label: Imagen, name: image, widget: image, required: false, hint: "JPG o PNG. Tamaño recomendado: 800×450 px (proporción 16:9). Máx 1 MB." }
       - { label: Descripción corta, name: summary, widget: text }
       - { label: Contenido, name: body, widget: markdown }
       - { label: Activo, name: active, widget: boolean, default: true }
@@ -54,7 +54,7 @@ collections:
         options: [Piso 1, Piso 2, Piso 3, Piso 4]
       - { label: "Número de Local", name: local, widget: string, required: false, hint: "Ej: Local 101, Local 2-15" }
       - { label: Descripción corta, name: description, widget: text, required: false }
-      - { label: Logo, name: logo, widget: image, required: false }
+      - { label: Logo, name: logo, widget: image, required: false, hint: "PNG con fondo transparente recomendado. Tamaño: 300×300 px. Máx 500 KB." }
       - { label: "Facebook URL", name: facebook, widget: string, required: false }
       - { label: "Instagram URL", name: instagram, widget: string, required: false }
       - { label: "X (Twitter) URL", name: twitter_x, widget: string, required: false }
@@ -70,7 +70,7 @@ collections:
       - { label: Título, name: title, widget: string }
       - { label: Fecha, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
       - { label: Descripción, name: description, widget: text }
-      - { label: Imagen, name: image, widget: image, required: false }
+      - { label: Imagen, name: image, widget: image, required: false, hint: "JPG o PNG. Tamaño recomendado: 800×450 px (proporción 16:9). Máx 1 MB." }
       - { label: Activo, name: active, widget: boolean, default: true }
 
   - name: popup
@@ -85,7 +85,7 @@ collections:
           - { label: Cuerpo, name: body, widget: text }
           - { label: Texto del botón, name: button_label, widget: string }
           - { label: URL del botón, name: button_url, widget: string }
-          - { label: Imagen, name: image, widget: image, required: false }
+          - { label: Imagen, name: image, widget: image, required: false, hint: "JPG o PNG vertical (tipo afiche). Tamaño recomendado: 600×900 px. Máx 1 MB." }
           - { label: Activo, name: active, widget: boolean, default: true }
 
   - name: settings
