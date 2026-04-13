@@ -1,0 +1,130 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const novModules = import.meta.glob('../content/novedades/*.md', { eager: true });
+const novedades = Object.values(novModules)
+  .map((m) => m.frontmatter)
+  .filter((n) => n.active !== false)
+  .sort((a, b) => new Date(b.date) - new Date(a.date));
+---
+
+<Layout
+  title="Novedades – Centro Comercial Bolívar Plaza"
+  description="Entérate de las últimas novedades, aperturas, eventos y promociones del Centro Comercial Bolívar Plaza en Pereira."
+>
+  <section class="section">
+    <div class="container">
+      <h1 class="section-title page-title">Nove<span>dades</span></h1>
+
+      {novedades.length > 0 ? (
+        <div class="nov-grid">
+          {novedades.map((nov) => {
+            const dateObj = new Date(nov.date);
+            const dateStr = dateObj.toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+            return (
+              <article class="nov-card">
+                {nov.image && (
+                  <div class="nov-img-wrap">
+                    <img src={nov.image} alt={nov.title} class="nov-img" loading="lazy" />
+                  </div>
+                )}
+                <div class="nov-body">
+                  <time class="nov-date" datetime={nov.date}>{dateStr}</time>
+                  <h2 class="nov-title">{nov.title}</h2>
+                  <p class="nov-summary">{nov.summary}</p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      ) : (
+        <p class="no-content">Próximamente nuevas novedades. ¡Vuelve pronto!</p>
+      )}
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-title { margin-bottom: 2.5rem; }
+
+  .nov-grid {
+    display: grid;
+    gap: 1.75rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .nov-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .nov-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .nov-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+
+  .nov-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+
+  .nov-img-wrap {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .nov-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .nov-card:hover .nov-img { transform: scale(1.04); }
+
+  .nov-body {
+    padding: 1.25rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+  }
+
+  .nov-date {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .nov-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.35;
+  }
+
+  .nov-summary {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .no-content {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 4rem 0;
+    font-size: 1.1rem;
+  }
+</style>

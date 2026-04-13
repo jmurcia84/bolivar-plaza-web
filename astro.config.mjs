@@ -6,4 +6,5 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://bolivarplaza.com',
   integrations: [sitemap()],
+  devToolbar: { enabled: false },
 });

@@ -5,5 +5,7 @@
   "phone": "(606) 000-0000",
   "email": "info@bolivarplaza.com",
   "facebook_url": "",
-  "instagram_url": ""
+  "instagram_url": "",
+  "hours_weekday": "Lun–Sáb: 9:00 am – 7:00 pm",
+  "hours_weekend": "Dom y Festivos: 11:00 am – 4:00 pm"
 }

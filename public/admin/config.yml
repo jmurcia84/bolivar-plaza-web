@@ -22,6 +22,20 @@ collections:
       - { label: URL del enlace (opcional), name: link_url, widget: string, required: false }
       - { label: Activo, name: active, widget: boolean, default: true }
 
+  - name: novedades
+    label: Novedades
+    label_singular: Novedad
+    folder: src/content/novedades
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Título, name: title, widget: string }
+      - { label: Fecha, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+      - { label: Imagen, name: image, widget: image, required: false }
+      - { label: Descripción corta, name: summary, widget: text }
+      - { label: Contenido, name: body, widget: markdown }
+      - { label: Activo, name: active, widget: boolean, default: true }
+
   - name: stores
     label: Tiendas
     label_singular: Tienda
@@ -84,3 +98,5 @@ collections:
           - { label: Correo electrónico, name: email, widget: string }
           - { label: URL de Facebook, name: facebook_url, widget: string, required: false }
           - { label: URL de Instagram, name: instagram_url, widget: string, required: false }
+          - { label: "Horario semana (ej: Lun–Sáb: 9:00 am – 7:00 pm)", name: hours_weekday, widget: string }
+          - { label: "Horario fin de semana (ej: Dom y Festivos: 11:00 am – 4:00 pm)", name: hours_weekend, widget: string }

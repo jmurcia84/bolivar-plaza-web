@@ -8,6 +8,13 @@ const featuredStores = Object.values(storeModules)
   .map((m) => m.frontmatter)
   .slice(0, 6);
 
+const novModules = import.meta.glob('../content/novedades/*.md', { eager: true });
+const novedades = Object.values(novModules)
+  .map((m) => m.frontmatter)
+  .filter((n) => n.active !== false)
+  .sort((a, b) => new Date(b.date) - new Date(a.date))
+  .slice(0, 3);
+
 const bannerModules = import.meta.glob('../content/banners/*.md', { eager: true });
 const banners = Object.values(bannerModules)
   .map((m) => m.frontmatter)
@@ -167,35 +174,36 @@ const jsonLd = {
     startAuto();
   </script>
 
-  <!-- Hours -->
+  <!-- Novedades -->
   <section class="section section-gray">
     <div class="container">
-      <h2 class="section-title">Horario de <span>atención</span></h2>
-      <div class="hours-grid">
-        <div class="hours-card">
-          <div class="hours-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
-            </svg>
-          </div>
-          <div>
-            <p class="hours-label">Lunes – Sábado</p>
-            <p class="hours-time">9:00 am – 7:00 pm</p>
-          </div>
+      <h2 class="section-title">Nove<span>dades</span></h2>
+      {novedades.length > 0 ? (
+        <div class="nov-grid">
+          {novedades.map((nov) => {
+            const dateObj = new Date(nov.date);
+            const dateStr = dateObj.toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+            return (
+              <article class="nov-card">
+                {nov.image && (
+                  <div class="nov-img-wrap">
+                    <img src={nov.image} alt={nov.title} class="nov-img" loading="lazy" />
+                  </div>
+                )}
+                <div class="nov-body">
+                  <time class="nov-date" datetime={nov.date}>{dateStr}</time>
+                  <h3 class="nov-title">{nov.title}</h3>
+                  <p class="nov-summary">{nov.summary}</p>
+                </div>
+              </article>
+            );
+          })}
         </div>
-        <div class="hours-card">
-          <div class="hours-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
-            </svg>
-          </div>
-          <div>
-            <p class="hours-label">Domingos y festivos</p>
-            <p class="hours-time">11:00 am – 4:00 pm</p>
-          </div>
-        </div>
+      ) : (
+        <p class="no-content">Próximamente nuevas novedades.</p>
+      )}
+      <div class="stores-cta">
+        <a href="/novedades" class="btn btn-outline">Ver todas las novedades</a>
       </div>
     </div>
   </section>
@@ -422,43 +430,86 @@ const jsonLd = {
     transform: scale(1.25);
   }
 
-  /* Hours */
-  .hours-grid {
+  /* Novedades */
+  .nov-grid {
     display: grid;
+    gap: 1.5rem;
     grid-template-columns: 1fr;
-    gap: 1.25rem;
-    max-width: 680px;
-    margin: 0 auto;
   }
 
-  @media (min-width: 540px) {
-    .hours-grid { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 640px) {
+    .nov-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  .hours-card {
+  @media (min-width: 1024px) {
+    .nov-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .nov-card {
     background: var(--white);
     border-radius: var(--radius);
-    padding: 1.5rem 1.75rem;
-    display: flex;
-    align-items: center;
-    gap: 1.1rem;
     box-shadow: var(--shadow);
-    border-left: 4px solid var(--green);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--transition), box-shadow var(--transition);
   }
 
-  .hours-icon { color: var(--green); flex-shrink: 0; }
+  .nov-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
 
-  .hours-label {
+  .nov-img-wrap {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .nov-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .nov-card:hover .nov-img { transform: scale(1.04); }
+
+  .nov-body {
+    padding: 1.25rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
+  }
+
+  .nov-date {
+    font-size: 0.75rem;
     font-weight: 600;
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    margin-bottom: 0.2rem;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 
-  .hours-time {
-    font-size: 1.1rem;
+  .nov-title {
+    font-size: 1rem;
     font-weight: 700;
     color: var(--navy);
+    line-height: 1.35;
+  }
+
+  .nov-summary {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .no-content {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 2rem 0;
   }
 
   /* Stores CTA */

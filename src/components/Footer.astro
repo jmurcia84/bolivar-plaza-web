@@ -1,11 +1,15 @@
 ---
+const settings = await import('../content/settings.json');
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
   <div class="container footer-inner">
+
     <div class="footer-brand">
-      <a href="/" class="footer-logo">Bolívar <span>Plaza</span></a>
+      <a href="/" class="footer-logo-link" aria-label="Bolívar Plaza – Inicio">
+        <img src="/uploads/logo-bolivar-plaza.png" alt="Bolívar Plaza Centro Comercial" class="footer-logo-img" />
+      </a>
       <p class="footer-tagline">Tu destino de compras en Pereira</p>
     </div>
 
@@ -21,20 +25,20 @@ const year = new Date().getFullYear();
       <h3>Contacto</h3>
       <address>
         <p>Cra 8 N 19-41, Pereira<br />Risaralda, Colombia</p>
-        <p><a href="tel:+576XXXXXXXX">(606) 000-0000</a></p>
-        <p><a href="mailto:info@bolivarplaza.com">info@bolivarplaza.com</a></p>
+        <p><a href={`tel:${settings.phone}`}>{settings.phone}</a></p>
+        <p><a href={`mailto:${settings.email}`}>{settings.email}</a></p>
       </address>
     </div>
 
     <div class="footer-social">
       <h3>Síguenos</h3>
       <div class="social-links">
-        <a href="#" aria-label="Facebook de Bolívar Plaza" class="social-icon">
+        <a href={settings.facebook_url || '#'} target="_blank" rel="noopener noreferrer" aria-label="Facebook de Bolívar Plaza" class="social-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
           </svg>
         </a>
-        <a href="#" aria-label="Instagram de Bolívar Plaza" class="social-icon">
+        <a href={settings.instagram_url || '#'} target="_blank" rel="noopener noreferrer" aria-label="Instagram de Bolívar Plaza" class="social-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
             <circle cx="12" cy="12" r="4"/>
@@ -43,6 +47,7 @@ const year = new Date().getFullYear();
         </a>
       </div>
     </div>
+
   </div>
 
   <div class="footer-bottom">
@@ -73,15 +78,18 @@ const year = new Date().getFullYear();
     .footer-inner { grid-template-columns: repeat(4, 1fr); }
   }
 
-  .footer-logo {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--white);
+  .footer-logo-link {
     display: inline-block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.65rem;
   }
 
-  .footer-logo span { color: var(--green); }
+  .footer-logo-img {
+    height: 45px;
+    width: auto;
+    display: block;
+    /* Invert to white so logo is visible on dark footer */
+    filter: brightness(0) invert(1);
+  }
 
   .footer-tagline {
     font-size: 0.875rem;
