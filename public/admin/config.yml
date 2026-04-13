@@ -47,13 +47,18 @@ collections:
       - label: Categoría
         name: category
         widget: select
-        options: [Moda, Comidas, Entretenimiento, Servicios]
+        options: [Moda, Comidas, Entretenimiento, Servicios, Salud y Belleza, Tecnología, Hogar, Otros]
       - label: Piso
         name: floor
         widget: select
-        options: [Piso 1, Piso 2, Piso 3]
-      - { label: Descripción corta, name: description, widget: text }
+        options: [Piso 1, Piso 2, Piso 3, Piso 4]
+      - { label: "Número de Local", name: local, widget: string, required: false, hint: "Ej: Local 101, Local 2-15" }
+      - { label: Descripción corta, name: description, widget: text, required: false }
       - { label: Logo, name: logo, widget: image, required: false }
+      - { label: "Facebook URL", name: facebook, widget: string, required: false }
+      - { label: "Instagram URL", name: instagram, widget: string, required: false }
+      - { label: "X (Twitter) URL", name: twitter_x, widget: string, required: false }
+      - { label: "WhatsApp", name: whatsapp, widget: string, required: false, hint: "Solo número con código de país. Ej: 573001234567" }
 
   - name: events
     label: Eventos

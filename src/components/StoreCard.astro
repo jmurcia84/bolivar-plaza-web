@@ -1,14 +1,19 @@
 ---
-const { name, category, floor, description, logo } = Astro.props;
+const { name, category, floor, local, description, logo, facebook, instagram, twitter_x, whatsapp } = Astro.props;
 
 const categoryColors = {
-  Moda:           { bg: '#e8f5d6', color: '#276658' },
-  Comidas:        { bg: '#fdf3d0', color: '#8a6500' },
-  Entretenimiento:{ bg: '#d6f0eb', color: '#276658' },
-  Servicios:      { bg: '#f0f0f2', color: '#595959' },
+  Moda:              { bg: '#e8f5d6', color: '#276658' },
+  Comidas:           { bg: '#fdf3d0', color: '#8a6500' },
+  Entretenimiento:   { bg: '#d6f0eb', color: '#276658' },
+  Servicios:         { bg: '#f0f0f2', color: '#595959' },
+  'Salud y Belleza': { bg: '#fde8f0', color: '#8a003c' },
+  Tecnología:        { bg: '#ddeeff', color: '#004080' },
+  Hogar:             { bg: '#fff0d6', color: '#7a4500' },
+  Otros:             { bg: '#f0f0f2', color: '#595959' },
 };
 
 const cat = categoryColors[category] ?? { bg: '#f0f0f2', color: '#595959' };
+const hasSocial = facebook || instagram || twitter_x || whatsapp;
 ---
 
 <article class="store-card">
@@ -18,13 +23,51 @@ const cat = categoryColors[category] ?? { bg: '#f0f0f2', color: '#595959' };
       : <span class="logo-placeholder">{name.charAt(0)}</span>
     }
   </div>
+
   <div class="store-info">
     <h3 class="store-name">{name}</h3>
+
     <div class="store-meta">
       <span class="badge" style={`background:${cat.bg};color:${cat.color}`}>{category}</span>
-      <span class="floor">{floor}</span>
+      <span class="floor">{floor}{local ? ` · ${local}` : ''}</span>
     </div>
+
     {description && <p class="store-desc">{description}</p>}
+
+    {hasSocial && (
+      <div class="store-social">
+        {facebook && (
+          <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label={`Facebook de ${name}`} class="social-link facebook">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </a>
+        )}
+        {instagram && (
+          <a href={instagram} target="_blank" rel="noopener noreferrer" aria-label={`Instagram de ${name}`} class="social-link instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+        )}
+        {twitter_x && (
+          <a href={twitter_x} target="_blank" rel="noopener noreferrer" aria-label={`X (Twitter) de ${name}`} class="social-link twitter">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+        )}
+        {whatsapp && (
+          <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noopener noreferrer" aria-label={`WhatsApp de ${name}`} class="social-link whatsapp">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+            </svg>
+          </a>
+        )}
+      </div>
+    )}
   </div>
 </article>
 
@@ -56,7 +99,8 @@ const cat = categoryColors[category] ?? { bg: '#f0f0f2', color: '#595959' };
   .store-logo img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 0.5rem;
   }
 
   .logo-placeholder {
@@ -112,5 +156,34 @@ const cat = categoryColors[category] ?? { bg: '#f0f0f2', color: '#595959' };
     color: var(--text-muted);
     line-height: 1.5;
     margin-top: 0.1rem;
+    flex: 1;
   }
+
+  /* Social links */
+  .store-social {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--gray-mid);
+    flex-wrap: wrap;
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    transition: opacity var(--transition), transform var(--transition);
+    color: var(--white);
+  }
+
+  .social-link:hover { opacity: 0.85; transform: scale(1.1); }
+
+  .social-link.facebook  { background: #1877f2; }
+  .social-link.instagram { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+  .social-link.twitter   { background: #000; }
+  .social-link.whatsapp  { background: #25d366; }
 </style>
