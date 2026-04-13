@@ -286,18 +286,19 @@ const jsonLd = {
     pointer-events: auto;
   }
 
-  /* Slide image fill – always crops to exact slider dimensions */
+  /* Slide image fill */
   .slide-inner {
     display: block;
     width: 100%;
     height: 100%;
     overflow: hidden;
+    background: #000;
   }
 
   .slide-bg-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
     display: block;
   }
