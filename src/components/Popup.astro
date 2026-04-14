@@ -18,6 +18,13 @@ const {
   const overlay = document.getElementById('popup-overlay');
   const closeBtn = document.getElementById('popup-close');
 
+  // Suppress popup when Netlify Identity tokens are in the URL hash
+  // (invite_token, recovery_token, confirmation_token, access_token)
+  const hash = window.location.hash;
+  if (overlay && /token=/i.test(hash)) {
+    overlay.remove();
+  }
+
   function closePopup() {
     if (overlay) {
       overlay.classList.add('closing');
