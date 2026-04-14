@@ -7,6 +7,9 @@ const events = Object.values(eventModules)
   .map((m) => m.frontmatter)
   .filter((e) => e.active !== false)
   .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+// Pass event dates to the client-side calendar
+const eventDates = events.map((e) => e.date);
 ---
 
 <Layout
@@ -21,21 +24,36 @@ const events = Object.values(eventModules)
     </div>
   </section>
 
-  <!-- Events Grid -->
+  <!-- Calendar + Events -->
   <section class="section">
-    <div class="container">
-      {events.length > 0
-        ? (
-          <div class="grid-cards events-grid">
-            {events.map((event) => (
-              <EventCard {...event} />
-            ))}
-          </div>
-        )
-        : (
+    <div class="container events-layout">
+
+      <!-- Calendar -->
+      <div class="cal-wrap">
+        <div id="cal-root" data-events={JSON.stringify(eventDates)} aria-label="Calendario de eventos"></div>
+      </div>
+
+      <!-- Events list -->
+      <div class="events-col">
+        {events.length > 0 ? (
+          <>
+            <div class="grid-cards events-grid" id="events-container">
+              {events.map((event) => (
+                <div class="event-item" data-date={event.date}>
+                  <EventCard {...event} />
+                </div>
+              ))}
+            </div>
+            <p class="no-filtered" id="no-filtered" style="display:none">
+              No hay eventos para esta fecha.
+              <button class="link-btn" id="no-filtered-clear">Ver todos</button>
+            </p>
+          </>
+        ) : (
           <p class="no-events">No hay eventos programados en este momento. ¡Vuelve pronto!</p>
-        )
-      }
+        )}
+      </div>
+
     </div>
   </section>
 
@@ -51,50 +69,366 @@ const events = Object.values(eventModules)
   </section>
 </Layout>
 
+<!-- Calendar script – is:inline keeps it in place so the DOM is ready -->
+<script is:inline>
+(function () {
+  var calRoot = document.getElementById('cal-root');
+  if (!calRoot) return;
+
+  var eventDates   = JSON.parse(calRoot.dataset.events || '[]');
+  var eventDateSet = new Set(eventDates);
+
+  var selectedDate = null;
+  var now          = new Date();
+  var viewYear     = now.getFullYear();
+  var viewMonth    = now.getMonth(); // 0-indexed
+
+  var MONTH_NAMES = [
+    'Enero','Febrero','Marzo','Abril','Mayo','Junio',
+    'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
+  ];
+  var DAY_NAMES = ['Lu','Ma','Mi','Ju','Vi','Sá','Do'];
+
+  /* ── helpers ── */
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function toISO(y, m, d) { return y + '-' + pad(m + 1) + '-' + pad(d); }
+  function todayISO() {
+    var t = new Date();
+    return toISO(t.getFullYear(), t.getMonth(), t.getDate());
+  }
+
+  /* ── render calendar ── */
+  function renderCalendar() {
+    var firstDow     = new Date(viewYear, viewMonth, 1).getDay(); // Sun=0
+    var startOffset  = (firstDow + 6) % 7;                       // Mon=0
+    var daysInMonth  = new Date(viewYear, viewMonth + 1, 0).getDate();
+    var today        = todayISO();
+
+    /* header */
+    var html = '<div class="cal-header">'
+      + '<button class="cal-nav" id="cal-prev" aria-label="Mes anterior">&#8249;</button>'
+      + '<span class="cal-title">' + MONTH_NAMES[viewMonth] + ' ' + viewYear + '</span>'
+      + '<button class="cal-nav" id="cal-next" aria-label="Mes siguiente">&#8250;</button>'
+      + '</div>';
+
+    /* day-name row */
+    html += '<div class="cal-grid">';
+    DAY_NAMES.forEach(function (d) {
+      html += '<div class="cal-day-name">' + d + '</div>';
+    });
+
+    /* blank cells */
+    for (var i = 0; i < startOffset; i++) {
+      html += '<div class="cal-cell cal-empty"></div>';
+    }
+
+    /* day cells */
+    for (var d = 1; d <= daysInMonth; d++) {
+      var iso      = toISO(viewYear, viewMonth, d);
+      var hasEvent = eventDateSet.has(iso);
+      var cls      = 'cal-cell cal-day'
+        + (hasEvent    ? ' has-event'  : '')
+        + (iso === today        ? ' is-today'   : '')
+        + (iso === selectedDate ? ' is-selected': '');
+
+      html += '<button class="' + cls + '" data-date="' + iso + '" aria-label="' + iso + '">'
+        + d
+        + (hasEvent ? '<span class="event-dot" aria-hidden="true"></span>' : '')
+        + '</button>';
+    }
+    html += '</div>'; /* end cal-grid */
+
+    /* clear-filter row */
+    if (selectedDate) {
+      html += '<div class="cal-clear">'
+        + '<button id="cal-clear-btn" class="cal-clear-btn">&#10005; Ver todos los eventos</button>'
+        + '</div>';
+    }
+
+    calRoot.innerHTML = html;
+    attachListeners();
+  }
+
+  /* ── filter events ── */
+  function filterEvents() {
+    var items      = document.querySelectorAll('.event-item');
+    var noFiltered = document.getElementById('no-filtered');
+    var visible    = 0;
+
+    items.forEach(function (item) {
+      var show = !selectedDate || item.dataset.date === selectedDate;
+      item.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    if (noFiltered) {
+      noFiltered.style.display = (selectedDate && visible === 0) ? 'block' : 'none';
+    }
+  }
+
+  /* ── attach listeners after each render ── */
+  function attachListeners() {
+    var prevBtn = document.getElementById('cal-prev');
+    var nextBtn = document.getElementById('cal-next');
+    var clearBtn = document.getElementById('cal-clear-btn');
+    var noClearBtn = document.getElementById('no-filtered-clear');
+
+    if (prevBtn) prevBtn.addEventListener('click', function () {
+      viewMonth--;
+      if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+      renderCalendar();
+    });
+
+    if (nextBtn) nextBtn.addEventListener('click', function () {
+      viewMonth++;
+      if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+      renderCalendar();
+    });
+
+    document.querySelectorAll('.cal-day.has-event').forEach(function (cell) {
+      cell.addEventListener('click', function () {
+        var date = cell.dataset.date;
+        selectedDate = (date === selectedDate) ? null : date;
+        filterEvents();
+        renderCalendar();
+      });
+    });
+
+    if (clearBtn) clearBtn.addEventListener('click', function () {
+      selectedDate = null;
+      filterEvents();
+      renderCalendar();
+    });
+
+    if (noClearBtn) noClearBtn.addEventListener('click', function () {
+      selectedDate = null;
+      filterEvents();
+      renderCalendar();
+    });
+  }
+
+  /* ── if the selected month has no events, navigate to first event month ── */
+  function jumpToFirstEventMonth() {
+    if (eventDates.length === 0) return;
+    var first = eventDates[0].split('-');
+    viewYear  = parseInt(first[0], 10);
+    viewMonth = parseInt(first[1], 10) - 1;
+  }
+
+  // If current month has no events, jump to first event month
+  var hasEventThisMonth = eventDates.some(function (d) {
+    var p = d.split('-');
+    return parseInt(p[0], 10) === viewYear && parseInt(p[1], 10) - 1 === viewMonth;
+  });
+  if (!hasEventThisMonth) jumpToFirstEventMonth();
+
+  renderCalendar();
+})();
+</script>
+
 <style>
+  /* ── Page header ── */
   .page-header {
     background: var(--navy);
     color: var(--white);
     padding: 3rem 0 2.5rem;
     text-align: center;
   }
-
-  .page-header h1 {
-    font-size: clamp(1.75rem, 4vw, 2.5rem);
-    margin-bottom: 0.5rem;
-  }
-
+  .page-header h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); margin-bottom: 0.5rem; }
   .page-header h1 span { color: var(--green); }
+  .page-header p { color: rgba(255,255,255,0.72); font-size: 1rem; }
 
-  .page-header p {
-    color: rgba(255,255,255,0.72);
-    font-size: 1rem;
+  /* ── Layout: stacked on mobile, side-by-side on desktop ── */
+  .events-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    align-items: flex-start;
   }
 
-  .events-grid {
-    max-width: 860px;
-    margin: 0 auto;
+  @media (min-width: 900px) {
+    .events-layout {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 3rem;
+    }
+    .cal-wrap  { flex: 0 0 300px; position: sticky; top: 80px; }
+    .events-col { flex: 1; min-width: 0; }
   }
+
+  .cal-wrap { width: 100%; max-width: 340px; }
+
+  /* ── Calendar shell ── */
+  #cal-root {
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 1.25rem 1rem 1rem;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    user-select: none;
+  }
+
+  /* ── Calendar header ── */
+  :global(.cal-header) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  :global(.cal-title) {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--navy);
+    text-transform: capitalize;
+    letter-spacing: 0.01em;
+  }
+
+  :global(.cal-nav) {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--navy);
+    font-size: 1.6rem;
+    line-height: 1;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    transition: background var(--transition), color var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  :global(.cal-nav:hover) {
+    background: var(--green);
+    color: var(--white);
+  }
+
+  /* ── Calendar grid ── */
+  :global(.cal-grid) {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+
+  :global(.cal-day-name) {
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.3rem 0 0.5rem;
+  }
+
+  :global(.cal-cell) {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text);
+    position: relative;
+    padding: 0;
+    border: none;
+    background: none;
+    font-family: inherit;
+    gap: 2px;
+  }
+
+  :global(.cal-day) {
+    cursor: default;
+  }
+
+  :global(.cal-day.has-event) {
+    cursor: pointer;
+    color: var(--navy);
+    font-weight: 700;
+  }
+  :global(.cal-day.has-event:hover) {
+    background: rgba(143,199,74,0.15);
+  }
+
+  :global(.cal-day.is-today) {
+    outline: 2px solid var(--navy);
+    outline-offset: -2px;
+  }
+
+  :global(.cal-day.is-selected) {
+    background: var(--navy) !important;
+    color: var(--white) !important;
+  }
+  :global(.cal-day.is-selected .event-dot) {
+    background: rgba(255,255,255,0.7) !important;
+  }
+
+  :global(.cal-empty) { pointer-events: none; }
+
+  /* ── Event dot ── */
+  :global(.event-dot) {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    display: block;
+    flex-shrink: 0;
+  }
+
+  /* ── Clear filter ── */
+  :global(.cal-clear) {
+    margin-top: 1rem;
+    text-align: center;
+  }
+  :global(.cal-clear-btn) {
+    background: none;
+    border: 1.5px solid var(--navy);
+    color: var(--navy);
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: inherit;
+    padding: 0.35rem 0.9rem;
+    border-radius: 20px;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background var(--transition), color var(--transition);
+  }
+  :global(.cal-clear-btn:hover) {
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  /* ── Events column ── */
+  .events-grid { gap: 1.25rem; }
 
   @media (min-width: 640px) {
     .events-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  @media (min-width: 1024px) {
-    .events-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  .no-events {
+  .no-events,
+  .no-filtered {
     text-align: center;
     color: var(--text-muted);
     padding: 3rem 0;
-    font-size: 1.05rem;
+    font-size: 1rem;
   }
 
-  .cta-banner {
-    background: var(--gray-light);
+  .link-btn {
+    background: none;
+    border: none;
+    color: var(--green);
+    font-weight: 700;
+    font-size: inherit;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+    text-decoration: underline;
+    margin-left: 0.25rem;
   }
 
+  /* ── CTA ── */
+  .cta-banner { background: var(--gray-light); }
   .cta-inner {
     display: flex;
     align-items: center;
@@ -102,15 +436,6 @@ const events = Object.values(eventModules)
     gap: 1.5rem;
     flex-wrap: wrap;
   }
-
-  .cta-inner h2 {
-    font-size: 1.3rem;
-    color: var(--navy);
-    margin-bottom: 0.35rem;
-  }
-
-  .cta-inner p {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-  }
+  .cta-inner h2 { font-size: 1.3rem; color: var(--navy); margin-bottom: 0.35rem; }
+  .cta-inner p  { font-size: 0.9rem; color: var(--text-muted); }
 </style>
