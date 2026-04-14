@@ -1,0 +1,143 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const settings = await import('../content/settings.json');
+const carteleraUrl = settings.cartelera_url || 'https://cinemasroyalfilms.com/cartelera/pereira';
+---
+
+<Layout
+  title="Cartelera de Cine – Bolívar Plaza"
+  description="Consulta la cartelera de Cine Royal Films en Centro Comercial Bolívar Plaza, Pereira. Horarios, películas y disponibilidad."
+>
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Cartelera de <span>Cine</span></h1>
+      <p>Cine Royal Films · Centro Comercial Bolívar Plaza, Pereira</p>
+    </div>
+  </section>
+
+  <!-- Embed -->
+  <section class="embed-section">
+    <div class="embed-wrap">
+      <iframe
+        id="cartelera-frame"
+        src={carteleraUrl}
+        title="Cartelera de Cine Royal Films – Pereira"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+
+      <!-- Fallback shown via JS if iframe fails to load -->
+      <div class="embed-fallback" id="embed-fallback" style="display:none">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <rect x="2" y="3" width="20" height="14" rx="2"/>
+          <path d="M8 21h8M12 17v4"/>
+        </svg>
+        <p>No fue posible cargar la cartelera en esta ventana.</p>
+        <a href={carteleraUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          Ver cartelera en sitio externo ↗
+        </a>
+      </div>
+    </div>
+
+    <p class="external-link-hint">
+      ¿Problemas para visualizar?
+      <a href={carteleraUrl} target="_blank" rel="noopener noreferrer">
+        Abrir cartelera en pestaña nueva ↗
+      </a>
+    </p>
+  </section>
+</Layout>
+
+<script is:inline>
+  // Show fallback if the iframe errors (blocked by browser or site)
+  var frame = document.getElementById('cartelera-frame');
+  var fallback = document.getElementById('embed-fallback');
+
+  if (frame) {
+    frame.addEventListener('error', function () {
+      frame.style.display = 'none';
+      if (fallback) fallback.style.display = 'flex';
+    });
+  }
+</script>
+
+<style>
+  /* ── Page header ── */
+  .page-header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 3rem 0 2.5rem;
+    text-align: center;
+  }
+  .page-header h1 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    margin-bottom: 0.5rem;
+  }
+  .page-header h1 span { color: var(--green); }
+  .page-header p {
+    color: rgba(255,255,255,0.72);
+    font-size: 1rem;
+  }
+
+  /* ── Embed section ── */
+  .embed-section {
+    padding: 2rem 0 3rem;
+    background: var(--gray-light);
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .embed-wrap {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+    position: relative;
+  }
+
+  /* ── Iframe ── */
+  iframe#cartelera-frame {
+    width: 100%;
+    height: 80vh;
+    min-height: 600px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    background: var(--white);
+    display: block;
+  }
+
+  /* ── Fallback card ── */
+  .embed-fallback {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    text-align: center;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+  }
+  .embed-fallback svg { color: var(--navy); opacity: 0.4; }
+  .embed-fallback p { font-size: 1rem; }
+
+  /* ── External link hint ── */
+  .external-link-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+  .external-link-hint a {
+    color: var(--green);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+  .external-link-hint a:hover { color: var(--green-dark); }
+</style>

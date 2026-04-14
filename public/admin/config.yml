@@ -105,3 +105,4 @@ collections:
           - { label: URL de Instagram, name: instagram_url, widget: string, required: false }
           - { label: "Horario semana (ej: Lun–Sáb: 9:00 am – 7:00 pm)", name: hours_weekday, widget: string }
           - { label: "Horario fin de semana (ej: Dom y Festivos: 11:00 am – 4:00 pm)", name: hours_weekend, widget: string }
+          - { label: "URL Cartelera de Cine", name: cartelera_url, widget: string, required: false, hint: "URL del sitio de cartelera a mostrar en la sección Cine. Ej: https://cinemasroyalfilms.com/cartelera/pereira" }
