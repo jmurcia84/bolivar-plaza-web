@@ -1,4 +1,4 @@
-local_backend: true
+# local_backend: true   ← uncomment this line only when running: npm run dev:cms
 
 backend:
   name: git-gateway
