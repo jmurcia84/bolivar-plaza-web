@@ -1,7 +1,9 @@
 ---
 const { title, date, description, image } = Astro.props;
 
-const dateObj = new Date(date);
+// Parse "YYYY-MM-DD" as LOCAL midnight to avoid UTC→Colombia timezone shift
+const [_y, _m, _d] = String(date).split('-').map(Number);
+const dateObj = new Date(_y, _m - 1, _d);
 const day = dateObj.toLocaleDateString('es-CO', { day: '2-digit' });
 const month = dateObj.toLocaleDateString('es-CO', { month: 'short' }).toUpperCase();
 const fullDate = dateObj.toLocaleDateString('es-CO', {

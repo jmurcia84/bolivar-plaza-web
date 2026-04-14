@@ -2,13 +2,29 @@
 import Layout from '../layouts/Layout.astro';
 import EventCard from '../components/EventCard.astro';
 
+// Normalize any date value (string OR Date object) to a plain "YYYY-MM-DD" string.
+// gray-matter parses bare YAML dates (2025-05-10) as JS Date objects, which
+// when coerced to strings produce ISO timestamps that break Set lookups.
+function toYMD(raw) {
+  if (!raw) return '';
+  if (raw instanceof Date) {
+    // Use UTC parts to avoid timezone-shift turning May 10 → May 9
+    const y = raw.getUTCFullYear();
+    const m = String(raw.getUTCMonth() + 1).padStart(2, '0');
+    const d = String(raw.getUTCDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+  // String: trim to first 10 chars ("YYYY-MM-DD")
+  return String(raw).slice(0, 10);
+}
+
 const eventModules = import.meta.glob('../content/events/*.md', { eager: true });
 const events = Object.values(eventModules)
-  .map((m) => m.frontmatter)
+  .map((m) => ({ ...m.frontmatter, date: toYMD(m.frontmatter.date) }))
   .filter((e) => e.active !== false)
-  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  .sort((a, b) => a.date.localeCompare(b.date));
 
-// Pass event dates to the client-side calendar
+// Pass normalised "YYYY-MM-DD" strings to the client calendar
 const eventDates = events.map((e) => e.date);
 ---
 
