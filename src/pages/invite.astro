@@ -19,7 +19,6 @@
       align-items: center;
       justify-content: center;
       background: #f0f0f0;
-      gap: 1.5rem;
     }
     .card {
       background: #fff;
@@ -31,47 +30,56 @@
       width: 90%;
     }
     img { height: 48px; width: auto; margin-bottom: 1rem; }
-    h1 { font-size: 1.1rem; color: #222; margin-bottom: 0.5rem; }
+    h1 { font-size: 1.05rem; color: #222; margin-bottom: 0.5rem; }
     p { color: #666; font-size: 0.875rem; line-height: 1.5; }
-    .status { margin-top: 1rem; font-size: 0.8rem; color: #999; }
+    #status-msg { margin-top: 1rem; font-size: 0.8rem; color: #999; }
+    #status-msg.error { color: #c0392b; }
   </style>
 </head>
 <body>
   <div class="card">
     <img src="/uploads/logo-bolivar-plaza.png" alt="Bolívar Plaza" />
     <h1>Acceso al panel de administración</h1>
-    <p>Por favor espera, verificando tu enlace de acceso…</p>
-    <p class="status" id="status-msg"></p>
+    <p>Verificando tu enlace… el formulario aparecerá en un momento.</p>
+    <p id="status-msg"></p>
   </div>
 
-  <!-- Load widget AFTER body content so DOM is ready -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  <script>
-    var statusMsg = document.getElementById('status-msg');
+  <!-- is:inline prevents Astro from hoisting/bundling these scripts -->
+  <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script is:inline>
+    var statusEl = document.getElementById('status-msg');
 
-    // The widget automatically reads invite_token / recovery_token from the hash
-    // and shows its own dialog — do NOT call open() or it overrides token handling
-    if (window.netlifyIdentity) {
+    function initIdentity() {
+      if (!window.netlifyIdentity) {
+        statusEl.textContent = 'No se pudo cargar el widget. Recarga la página.';
+        statusEl.className = 'error';
+        return;
+      }
+
       window.netlifyIdentity.on('init', function(user) {
         if (user) {
-          // Already logged in – go straight to admin
           window.location.href = '/admin/';
-        } else {
-          statusMsg.textContent = 'Enlace verificado. Completa el formulario que aparece en pantalla.';
         }
+        // Widget will automatically show the set-password form
+        // when invite_token or recovery_token is in the URL hash.
+        // Do NOT call open() — it overrides the token handling.
       });
 
       window.netlifyIdentity.on('login', function() {
-        statusMsg.textContent = 'Acceso confirmado. Redirigiendo…';
         window.location.href = '/admin/';
       });
 
       window.netlifyIdentity.on('error', function(err) {
-        statusMsg.textContent = 'Error: ' + (err.message || 'El enlace puede haber expirado. Solicita uno nuevo.');
-        statusMsg.style.color = '#c0392b';
+        statusEl.textContent = 'Error: ' + (err && err.message ? err.message : 'El enlace puede haber expirado. Solicita uno nuevo desde Netlify.');
+        statusEl.className = 'error';
       });
+    }
+
+    // Run after full page load to ensure widget script has executed
+    if (document.readyState === 'complete') {
+      initIdentity();
     } else {
-      statusMsg.textContent = 'No se pudo cargar el widget de acceso. Intenta recargar la página.';
+      window.addEventListener('load', initIdentity);
     }
   </script>
 </body>
