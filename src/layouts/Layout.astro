@@ -27,6 +27,15 @@ const {
     />
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script>
+      // Redirect Netlify Identity token URLs to the dedicated /invite page
+      // so the widget has a clean environment to show its dialogs
+      (function () {
+        var hash = window.location.hash;
+        if (hash && /token=/.test(hash) && window.location.pathname !== '/invite') {
+          window.location.replace('/invite' + hash);
+        }
+      })();
+
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on("init", user => {
           if (!user) {

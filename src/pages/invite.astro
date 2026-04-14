@@ -1,0 +1,53 @@
+---
+// Standalone identity page – no layout, no popup, nothing else
+// Handles: invite_token, recovery_token, confirmation_token
+---
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Acceso – Bolívar Plaza</title>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #f4f4f4;
+      gap: 1rem;
+    }
+    img { height: 48px; width: auto; }
+    p { color: #555; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <img src="/uploads/logo-bolivar-plaza.png" alt="Bolívar Plaza" />
+  <p>Cargando formulario de acceso…</p>
+
+  <script>
+    // Open the identity widget as soon as it's ready
+    function openIdentity() {
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on('init', () => {
+          window.netlifyIdentity.open();
+        });
+        window.netlifyIdentity.on('login', () => {
+          window.location.href = '/admin/';
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', openIdentity);
+    } else {
+      openIdentity();
+    }
+  </script>
+</body>
+</html>
