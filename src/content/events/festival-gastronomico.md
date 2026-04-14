@@ -1,6 +1,9 @@
 ---
 title: Festival Gastronómico Bolívar Plaza
-date: "2025-06-07"
-description: Una experiencia culinaria única con los mejores restaurantes del mall. Degustaciones, showcooking en vivo y concursos de recetas. ¡No te lo pierdas!
+date: 2025-06-07
+description: Una experiencia culinaria única con los mejores restaurantes del
+  mall. Degustaciones, showcooking en vivo y concursos de recetas. ¡No te lo
+  pierdas!
+image: /uploads/gemini_generated_image_r69w2jr69w2jr69w-comida.png
 active: true
 ---
