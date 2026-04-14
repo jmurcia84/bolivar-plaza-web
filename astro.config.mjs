@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://bolivarplaza.com',
+  site: 'https://new-bolivar-plaza-site.netlify.app',
   integrations: [sitemap()],
   devToolbar: { enabled: false },
 });
