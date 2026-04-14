@@ -1,7 +1,7 @@
 ---
 title: Nueva tienda de moda internacional llega a Bolívar Plaza
 date: 2025-04-05
-image: /uploads/gemini_generated_image_r69w2jr69w2jr69w.png
+image: ""
 summary: Nos complace anunciar la apertura de una exclusiva tienda de moda en
   nuestro segundo piso. Conoce las últimas tendencias sin salir de Pereira.
 active: true
