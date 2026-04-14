@@ -22,6 +22,7 @@
     "cheerio": "^1.2.0",
     "concurrently": "^9.2.1",
     "decap-server": "^3.6.0",
+    "netlify-cli": "^24.11.1",
     "puppeteer": "^24.40.0",
     "slugify": "^1.6.9"
   }
