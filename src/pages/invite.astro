@@ -9,7 +9,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex" />
   <title>Acceso – Bolívar Plaza</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -19,34 +18,60 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: #f4f4f4;
-      gap: 1rem;
+      background: #f0f0f0;
+      gap: 1.5rem;
     }
-    img { height: 48px; width: auto; }
-    p { color: #555; font-size: 0.9rem; }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      max-width: 360px;
+      width: 90%;
+    }
+    img { height: 48px; width: auto; margin-bottom: 1rem; }
+    h1 { font-size: 1.1rem; color: #222; margin-bottom: 0.5rem; }
+    p { color: #666; font-size: 0.875rem; line-height: 1.5; }
+    .status { margin-top: 1rem; font-size: 0.8rem; color: #999; }
   </style>
 </head>
 <body>
-  <img src="/uploads/logo-bolivar-plaza.png" alt="Bolívar Plaza" />
-  <p>Cargando formulario de acceso…</p>
+  <div class="card">
+    <img src="/uploads/logo-bolivar-plaza.png" alt="Bolívar Plaza" />
+    <h1>Acceso al panel de administración</h1>
+    <p>Por favor espera, verificando tu enlace de acceso…</p>
+    <p class="status" id="status-msg"></p>
+  </div>
 
+  <!-- Load widget AFTER body content so DOM is ready -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script>
-    // Open the identity widget as soon as it's ready
-    function openIdentity() {
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on('init', () => {
-          window.netlifyIdentity.open();
-        });
-        window.netlifyIdentity.on('login', () => {
-          window.location.href = '/admin/';
-        });
-      }
-    }
+    var statusMsg = document.getElementById('status-msg');
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', openIdentity);
+    // The widget automatically reads invite_token / recovery_token from the hash
+    // and shows its own dialog — do NOT call open() or it overrides token handling
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on('init', function(user) {
+        if (user) {
+          // Already logged in – go straight to admin
+          window.location.href = '/admin/';
+        } else {
+          statusMsg.textContent = 'Enlace verificado. Completa el formulario que aparece en pantalla.';
+        }
+      });
+
+      window.netlifyIdentity.on('login', function() {
+        statusMsg.textContent = 'Acceso confirmado. Redirigiendo…';
+        window.location.href = '/admin/';
+      });
+
+      window.netlifyIdentity.on('error', function(err) {
+        statusMsg.textContent = 'Error: ' + (err.message || 'El enlace puede haber expirado. Solicita uno nuevo.');
+        statusMsg.style.color = '#c0392b';
+      });
     } else {
-      openIdentity();
+      statusMsg.textContent = 'No se pudo cargar el widget de acceso. Intenta recargar la página.';
     }
   </script>
 </body>
